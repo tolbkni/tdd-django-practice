@@ -12,6 +12,8 @@ from selenium.webdriver.common.keys import Keys
 
 class PollsTest(LiveServerTestCase):
 
+    fixtures = ['admin_user.json']
+
     def setUp(self):
         self.browser = webdriver.Firefox()
         self.browser.implicitly_wait(3)
