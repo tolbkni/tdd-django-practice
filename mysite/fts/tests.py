@@ -7,6 +7,7 @@ Replace this with more appropriate tests for your application.
 
 from django.test import LiveServerTestCase
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 
 
 class PollsTest(LiveServerTestCase):
@@ -26,5 +27,18 @@ class PollsTest(LiveServerTestCase):
         body = self.browser.find_element_by_tag_name('body')
         self.assertIn('Django administration', body.text)
 
-        # TODO use the admin site to create a Poll
-        self.fail('finish this test')
+        username_field = self.browser.find_element_by_name('username')
+        username_field.send_keys('admin')
+
+        password_field = self.browser.find_element_by_name('password')
+        password_field.send_keys('adm1n')
+        password_field.send_keys(Keys.RETURN)
+
+        body = self.browser.find_element_by_tag_name('body')
+        self.assertIn('Site administration', body.text)
+
+        poll_links = self.browser.find_element_by_link_text('Polls')
+        self.assertEquals(len(poll_links), 2)
+
+        # TODO uses the admin site to create a new Poll
+        self.fail('todo: finish tests')
