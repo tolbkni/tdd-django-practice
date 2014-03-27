@@ -39,7 +39,7 @@ class PollsTest(LiveServerTestCase):
         body = self.browser.find_element_by_tag_name('body')
         self.assertIn('Site administration', body.text)
 
-        poll_links = self.browser.find_element_by_link_text('Polls')
+        poll_links = self.browser.find_elements_by_link_text('Polls')
         self.assertEquals(len(poll_links), 2)
 
         # TODO uses the admin site to create a new Poll
