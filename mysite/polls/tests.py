@@ -22,10 +22,15 @@ class PollModelTest(TestCase):
 
         # check we can find it in the database again
         all_polls_in_database = Poll.objects.all()
-        self.assertEquals(len(all_polls_in_database), 1)
+        self.assertEqual(len(all_polls_in_database), 1)
         only_poll_in_database = all_polls_in_database[0]
-        self.assertEquals(only_poll_in_database, poll)
+        self.assertEqual(only_poll_in_database, poll)
 
         # check that it's saved question and pub_date
-        self.assertEquals(only_poll_in_database.question, "What's up?")
-        self.assertEquals(only_poll_in_database.pub_date, poll.pub_date)
+        self.assertEqual(only_poll_in_database.question, "What's up?")
+        self.assertEqual(only_poll_in_database.pub_date, poll.pub_date)
+
+    def test_verbose_name_for_pub_date(self):
+        for field in Poll._meta.fields:
+            if field.name == 'pub_date':
+                self.assertEqual(field.verbose_name, 'Date published')
