@@ -6,3 +6,6 @@ class Poll(models.Model):
 
     question = models.CharField(max_length=200)
     pub_date = models.DateTimeField('Date published')
+
+    def __str__(self):
+        return self.question
