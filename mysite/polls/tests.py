@@ -7,7 +7,7 @@ Replace this with more appropriate tests for your application.
 
 from django.test import TestCase
 from django.utils import timezone
-from polls.models import Poll
+from polls.models import Choice, Poll
 
 
 class PollModelTest(TestCase):
@@ -40,3 +40,30 @@ class PollModelTest(TestCase):
         poll.question = 'How is babby formed?'
         # Python 2's unicode() was renamed str() in Python3
         self.assertEqual(str(poll), 'How is babby formed?')
+
+
+class ChoiceModelTest(TestCase):
+
+    def test_creating_some_choices_for_a_poll(self):
+        # start by creating a new Poll object
+        poll = Poll()
+        poll.question = "What's up?"
+        poll.pub_date = timezone.now()
+        poll.save()
+
+        # create a Choice object
+        choice = Choice()
+        # Link it to our Poll object
+        choice.poll = poll
+        choice.choice = "doin' fine..."
+        # It has some votes
+        choice.votes = 3
+        choice.save()
+
+        poll_choices = poll.choice_set.all()
+        self.assertEqual(poll_choices.count(), 1)
+
+        choice_from_db = poll_choices[0]
+        self.assertEqual(choice_from_db, choice)
+        self.assertEqual(choice_from_db.choice, "doin' fine...")
+        self.assertEqual(choice_from_db.votes, 3)
