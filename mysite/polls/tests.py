@@ -88,3 +88,20 @@ class HomePageViewTest(TestCase):
         content = response.content.decode('UTF-8')
         self.assertIn(poll1.question, content)
         self.assertIn(poll2.question, content)
+
+    def test_root_url_shows_links_to_all_polls(self):
+        # setup some polls
+        poll1 = Poll(question='6 times 7', pub_date=timezone.now())
+        poll1.save()
+        poll2 = Poll(question='life, the universe and everything', pub_date=timezone.now())
+        poll2.save()
+
+        response = self.client.get('/')
+
+        # Checks we have use the right template
+        self.assertTemplateUsed(response, 'home.html')
+
+        # Converts bytes to string
+        content = response.content.decode('UTF-8')
+        self.assertIn(poll1.question, content)
+        self.assertIn(poll2.question, content)
