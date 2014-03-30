@@ -5,6 +5,7 @@ when you run "manage.py test".
 Replace this with more appropriate tests for your application.
 """
 
+from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils import timezone
 from polls.models import Choice, Poll
@@ -109,3 +110,9 @@ class HomePageViewTest(TestCase):
         content = response.content.decode('UTF-8')
         self.assertIn(poll1.question, content)
         self.assertIn(poll2.question, content)
+
+        # Check the page also contains the urls to individual polls pages
+        poll1_url = reverse('polls.views.poll', args=[poll1.id, ])
+        self.assertIn(poll1, content)
+        poll2_url = reverse('polls.views.poll', args=[poll2.id, ])
+        self.assertIn(poll2_url, content)
