@@ -68,6 +68,14 @@ class PollsTest(LiveServerTestCase):
         time_field = self.browser.find_element_by_name('pub_date_1')
         time_field.send_keys('00:00')
 
+        # Adds three choices for the poll
+        choice_0 = self.browser.find_element_by_name('choice_set-1-choice')
+        choice_0.send_keys('Very awesome')
+        choice_1 = self.browser.find_element_by_name('choice_set-1-choice')
+        choice_1.send_keys('Quite awesome')
+        choice_2 = self.browser.find_element_by_name('choice_set-1-choice')
+        choice_2.send_keys('Moderately awesome')
+
         # Clicks the button to save the poll
         save_button = self.browser.find_element_by_css_selector("input[value='Save']")
         save_button.click()
