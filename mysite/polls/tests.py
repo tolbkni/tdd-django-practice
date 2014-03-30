@@ -113,6 +113,6 @@ class HomePageViewTest(TestCase):
 
         # Check the page also contains the urls to individual polls pages
         poll1_url = reverse('polls.views.poll', args=[poll1.id, ])
-        self.assertIn(poll1, content)
+        self.assertIn(poll1_url, content)
         poll2_url = reverse('polls.views.poll', args=[poll2.id, ])
         self.assertIn(poll2_url, content)
