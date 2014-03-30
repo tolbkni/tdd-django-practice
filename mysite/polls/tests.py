@@ -98,8 +98,12 @@ class HomePageViewTest(TestCase):
 
         response = self.client.get('/')
 
-        # Checks we have use the right template
+        # Check we have use the right template
         self.assertTemplateUsed(response, 'home.html')
+
+        # Check we have passed the polls to the template
+        polls_in_context = response.context['polls']
+        self.assertEqual(list(polls_in_context), [poll1, poll2])
 
         # Converts bytes to string
         content = response.content.decode('UTF-8')
