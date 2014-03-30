@@ -67,3 +67,7 @@ class ChoiceModelTest(TestCase):
         self.assertEqual(choice_from_db, choice)
         self.assertEqual(choice_from_db.choice, "doin' fine...")
         self.assertEqual(choice_from_db.votes, 3)
+
+    def test_choice_defaults(self):
+        choice = Choice()
+        self.assertEqual(choice.votes, 0)
