@@ -83,5 +83,4 @@ class PollsTest(LiveServerTestCase):
         new_poll_links = self.browser.find_elements_by_link_text('How awesome is Test-Driven Development?')
         self.assertEqual(len(new_poll_links), 1)
 
-        # TODO uses the admin site to create a new Poll
-        self.fail('todo: finish tests')
+        # Satisfied
