@@ -1,0 +1,15 @@
+language: python
+python:
+    - "3.3"
+
+# command to install dependencies
+install:
+    - "pip install -r requirements.txt --use-mirrors"
+
+# prepare database
+before_script:
+    - "python mysite/manage.py syncdb --noinput"
+
+# command to run tests
+script:
+    - "python mysite/manage.py test"
