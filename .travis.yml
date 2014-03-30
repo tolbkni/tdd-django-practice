@@ -1,0 +1,19 @@
+language: python
+python:
+    - "3.3"
+
+before_install:
+    - "export DISPLAY=:99.0"
+    - "sh -e /etc/init.d/xvfb start"
+
+# command to install dependencies
+install:
+    - "pip install -r requirements.txt --use-mirrors"
+
+# prepare database
+before_script:
+    - "python mysite/manage.py syncdb --noinput"
+
+# command to run tests
+script:
+    - "python mysite/manage.py test"
