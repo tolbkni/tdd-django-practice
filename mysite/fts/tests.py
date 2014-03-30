@@ -148,22 +148,33 @@ class PollsTest(LiveServerTestCase):
         log_out_link = self.browser.find_element_by_link_text('Log out')
         log_out_link.click()
 
-
     def test_voting_on_a_new_poll(self):
         # First, the administrator logs into the admin site and
         # creates a couple of new polls, and their response choices
         self._setup_polls_via_admin()
 
-        self.fail('TODO')
         # Now the regular user goes to the homepage of the site,
         # sees a list of polls
+        self.browser.get(self.live_server_url)
+        heading = self.browser.find_element_by_tag_name('h1')
+        self.assertEqual(heading.text, 'Polls')
 
         # The regular user clicks on the link of the first poll,
         # which is called 'How awesome is test-driven development?'
+        first_poll_title = POLL1.question
+        first_poll_link = self.browser.find_element_by_link_text(first_poll_title)
+        first_poll_link.click()
 
         # He is taken to a poll 'results' page, which says
         # "no-one has voted on this poll yet"
+        main_heading = self.browser.find_element_by_tag_name('h1')
+        self.assertEqual(main_heading.text, 'Poll Results')
+        sub_heading = self.browser.find_element_by_tag_name('h2')
+        self.assertEqual(sub_heading.text, first_poll_title)
+        body = self.browser.find_element_by_tag_name('body')
+        self.assertIn('No-one has voted on this poll yet', body.text)
 
+        self.fail('TODO')
         # He also sees a form, which offers him several choices.
         # He decide to select 'very awesome'
 
