@@ -84,3 +84,29 @@ class PollsTest(LiveServerTestCase):
         self.assertEqual(len(new_poll_links), 1)
 
         # Satisfied
+
+    def test_voting_on_a_new_poll(self):
+        pass
+        # First, the administrator logs into the admin site and
+        # creates a couple of new polls, and their response choices
+
+        # Now the regular user goes to the homepage of the site,
+        # sees a list of polls
+
+        # The regular user clicks on the link of the first poll,
+        # which is called 'How awesome is test-driven development?'
+
+        # He is taken to a poll 'results' page, which says
+        # "no-one has voted on this poll yet"
+
+        # He also sees a form, which offers him several choices.
+        # He decide to select 'very awesome'
+
+        # He clicks 'submit'
+
+        # The page refreshes, and he sees that his choice has updated
+        # the results, they now say '100 %: very awesome'.
+
+        # The page also says '1 votes'
+
+        # Satisfied
