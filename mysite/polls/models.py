@@ -11,5 +11,6 @@ class Poll(models.Model):
         return self.question
 
 
-class Choice(object):
-    pass
+class Choice(models.Model):
+
+    poll = models.ForeignKey(Poll)
