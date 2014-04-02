@@ -9,5 +9,6 @@ def home(request):
     return render(request, 'home.html', context)
 
 
-def poll():
-    pass
+def poll(request, poll_id):
+    context = {'poll': Poll.objects.get(pk=poll_id)}
+    return render(request, 'poll.html', context)
