@@ -5,6 +5,7 @@ when you run "manage.py test".
 Replace this with more appropriate tests for your application.
 """
 
+from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils import timezone
 from polls.models import Choice, Poll
@@ -71,3 +72,47 @@ class ChoiceModelTest(TestCase):
     def test_choice_defaults(self):
         choice = Choice()
         self.assertEqual(choice.votes, 0)
+
+
+class HomePageViewTest(TestCase):
+
+    def test_root_url_shows_all_polls(self):
+        # setup some polls
+        poll1 = Poll(question='6 times 7', pub_date=timezone.now())
+        poll1.save()
+        poll2 = Poll(question='life, the universe and everything', pub_date=timezone.now())
+        poll2.save()
+
+        response = self.client.get('/')
+
+        # Converts bytes to string
+        content = response.content.decode('UTF-8')
+        self.assertIn(poll1.question, content)
+        self.assertIn(poll2.question, content)
+
+    def test_root_url_shows_links_to_all_polls(self):
+        # setup some polls
+        poll1 = Poll(question='6 times 7', pub_date=timezone.now())
+        poll1.save()
+        poll2 = Poll(question='life, the universe and everything', pub_date=timezone.now())
+        poll2.save()
+
+        response = self.client.get('/')
+
+        # Check we have use the right template
+        self.assertTemplateUsed(response, 'home.html')
+
+        # Check we have passed the polls to the template
+        polls_in_context = response.context['polls']
+        self.assertEqual(list(polls_in_context), [poll1, poll2])
+
+        # Converts bytes to string
+        content = response.content.decode('UTF-8')
+        self.assertIn(poll1.question, content)
+        self.assertIn(poll2.question, content)
+
+        # Check the page also contains the urls to individual polls pages
+        poll1_url = reverse('polls.views.poll', args=[poll1.id, ])
+        self.assertIn(poll1_url, content)
+        poll2_url = reverse('polls.views.poll', args=[poll2.id, ])
+        self.assertIn(poll2_url, content)
