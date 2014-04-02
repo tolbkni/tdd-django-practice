@@ -173,3 +173,21 @@ class PollsVoteFormTest(TestCase):
 
         # Check it uses radio inputs to render
         self.assertIn('type="radio"', form.as_p())
+
+    def test_page_shows_choices_using_form(self):
+        # Setup a poll with choices
+        poll1 = Poll(question='time', pub_date=timezone.now())
+        poll1.save()
+        choice1 = Choice(poll=poll1, choice='PM', votes=0)
+        choice1.save()
+        choice2 = Choice(poll=poll1, choice="Gardener's", votes=0)
+        choice2.save()
+
+        response = self.client.get('/poll/%d/' % (poll1.id, ))
+
+        # Check we have passed a form of the right type
+        self.assertTrue(isinstance(response.context['form'], PollVoteForm))
+
+        content = response.content.decode('UTF-8').replace('&#39;', "'")
+        self.assertIn(choice1.choice, content)
+        self.assertIn(choice2.choice, content)
