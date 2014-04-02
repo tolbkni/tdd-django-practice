@@ -16,4 +16,5 @@ before_script:
 
 # command to run tests
 script:
-    - "python mysite/manage.py test"
+    - "python mysite/manage.py test polls"
+    - "python mysite/manage.py test fts"
