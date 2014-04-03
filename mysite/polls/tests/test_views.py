@@ -72,6 +72,45 @@ class SinglePollViewTest(TestCase):
         # Check our 'no votes yet' message appears
         self.assertIn('No-one has voted on this poll yet', content)
 
+    def test_view_shows_percentage_of_votes(self):
+        # Setup a poll with choices
+        poll1 = Poll(question='6 times 7', pub_date=timezone.now())
+        poll1.save()
+        choice1 = Choice(poll=poll1, choice='42', votes=1)
+        choice1.save()
+        choice2 = Choice(poll=poll1, choice='The Ultimate Answser', votes=2)
+        choice2.save()
+
+        response = self.client.get('/poll/%d/' % (poll1.id, ))
+
+        content = response.content.decode('UTF-8')
+        # Check the percentages of votes are shown, sensibly rounded
+        self.assertIn('33 %: 42', content)
+        self.assertIn('67 %: The Ultimate Answer', content)
+
+        # And the 'no-one has voted' message is gone
+        self.assertNotIn('No-one has voted', content)
+
+    def test_choice_can_calculate_its_own_percentage_of_votes(self):
+        poll1 = Poll(question='who?', pub_date=timezone.now())
+        poll1.save()
+        choice1 = Choice(poll=poll1, choice='me', votes=2)
+        choice1.save()
+        choice2 = Choice(poll=poll1, choice='you', votes=1)
+        choice2.save()
+
+        self.assertEqual(choice1.percentage(), 100 * 2 / 3.0)
+        self.assertEqual(choice2.percentage(), 100 * 1 / 3.0)
+
+        # Also check 0-vote case
+        choice1.votes = 0
+        choice1.save()
+        choice2.votes = 0
+        choice2.save()
+
+        self.assertEqual(choice1.percentage(), 0)
+        self.assertEqual(choice2.percentage(), 0)
+
     def test_view_can_handle_vote_via_post(self):
         # Setup a poll with choices
         poll1 = Poll(question='6 times 7', pub_date=timezone.now())
