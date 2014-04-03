@@ -164,7 +164,7 @@ class PollsVoteFormTest(TestCase):
         # build a voting form for poll1
         form = PollVoteForm(poll=poll1)
 
-        self.assertEqual([key for key in form.fields.keys()], ['vote'])
+        self.assertEqual(list(form.fields.keys()), ['vote'])
 
         self.assertEqual(form.fields['vote'].choices, [
             (choice1.id, choice1.choice),
