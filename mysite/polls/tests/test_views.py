@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils import timezone
-from polls.models import Poll
+from polls.models import Choice, Poll
 
 
 class HomePageViewTest(TestCase):
@@ -71,3 +71,29 @@ class SinglePollViewTest(TestCase):
 
         # Check our 'no votes yet' message appears
         self.assertIn('No-one has voted on this poll yet', content)
+
+    def test_view_can_handle_vote_via_post(self):
+        # Setup a poll with choices
+        poll1 = Poll(question='6 times 7', pub_date=timezone.now())
+        poll1.save()
+        choice1 = Choice(poll=poll1, choice='42', votes=1)
+        choice1.save()
+        choice2 = Choice(poll=poll1, choice='The Ultimate Answser', votes=3)
+        choice2.save()
+
+        # Setup our POST data
+        post_data = {'vote': str(choice2.id)}
+
+        # Make our request to the view
+        poll_url = '/poll/%d/' % (poll1.id, )
+        response = self.client.post(poll_url, data=post_data)
+
+        # Retrieve the updated choice from the database
+        choice_in_db = Choice.objects.get(pk=choice2.id)
+
+        # Check it's votes have gone up by 1
+        self.assertEqual(choice_in_db.votes, 4)
+
+        # Always redirect after a POST - even if, in this case, we go back
+        # to the same page.
+        self.assertRedirects(response, poll_url)
