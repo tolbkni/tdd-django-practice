@@ -218,7 +218,7 @@ class PollsTest(LiveServerTestCase):
 
         # The page refreshes, and he sees that his choice has updated
         # the results, they still say '100 %: very awesome'.
-        body_text = self.browser.find_elements_by_tag_name('body').text
+        body_text = self.browser.find_element_by_tag_name('body').text
         self.assertIn('100 %: Very awesome', body_text)
 
         # But the page now says '2 votes'
@@ -230,7 +230,7 @@ class PollsTest(LiveServerTestCase):
         submit_btn = self.browser.find_element_by_css_selector("input[type='submit']")
         submit_btn.click()
 
-        body_text = self.browser.find_elements_by_tag_name('body').text
+        body_text = self.browser.find_element_by_tag_name('body').text
         self.assertIn('67 %: Very awesome', body_text)
         self.assertIn('33 %: Quite awesome', body_text)
         self.assertIn('3 votes', body_text)

@@ -136,3 +136,24 @@ class SinglePollViewTest(TestCase):
         # Always redirect after a POST - even if, in this case, we go back
         # to the same page.
         self.assertRedirects(response, poll_url)
+
+    def test_view_shows_total_votes(self):
+        # Setup a poll with choices
+        poll1 = Poll(question='6 times 7', pub_date=timezone.now())
+        poll1.save()
+        choice1 = Choice(poll=poll1, choice='42', votes=1)
+        choice1.save()
+        choice2 = Choice(poll=poll1, choice='The Ultimate Answser', votes=2)
+        choice2.save()
+
+        response = self.client.get('/poll/%d/' % (poll1.id, ))
+        content = response.content.decode('UTF-8')
+        self.assertIn('3 votes', content)
+
+        # Check we only pluralise "votes" if necessary. details!
+        choice2.votes = 0
+        choice2.save()
+        response = self.client.get('/poll/%d/' % (poll1.id, ))
+        content = response.content.decode('UTF-8')
+        self.assertIn('1 vote', content)
+        self.assertNotIn('1 votes', content)
