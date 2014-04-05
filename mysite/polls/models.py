@@ -10,6 +10,9 @@ class Poll(models.Model):
     def __str__(self):
         return self.question
 
+    def total_votes(self):
+        return sum(c.votes for c in self.choice_set.all())
+
 
 class Choice(models.Model):
 
@@ -20,6 +23,7 @@ class Choice(models.Model):
     def percentage(self):
         total_votes_on_poll = sum(c.votes for c in self.poll.choice_set.all())
         try:
-            return 100 * self.votes / total_votes_on_poll
+            return round(100 * self.votes / total_votes_on_poll, 2)
         except ZeroDivisionError:
-            return 0
+            return round(0, 2)
+

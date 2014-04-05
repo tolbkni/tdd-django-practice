@@ -34,6 +34,23 @@ class PollModelTest(TestCase):
         # Python 2's unicode() was renamed str() in Python3
         self.assertEqual(str(poll), 'How is babby formed?')
 
+    def test_poll_can_tell_you_its_total_number_of_votes(self):
+        poll1 = Poll(question="where", pub_date=timezone.now())
+        poll1.save()
+        choice1 = Choice(poll=poll1, choice='here', votes=0)
+        choice1.save()
+        choice2 = Choice(poll=poll1, choice='there', votes=0)
+        choice2.save()
+
+        self.assertEqual(poll1.total_votes(), 0)
+
+        choice1.votes = 1000
+        choice1.save()
+        choice2.votes = 22
+        choice2.save()
+
+        self.assertEqual(poll1.total_votes(), 1022)
+
 
 class ChoiceModelTest(TestCase):
 

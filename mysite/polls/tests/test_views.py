@@ -78,7 +78,7 @@ class SinglePollViewTest(TestCase):
         poll1.save()
         choice1 = Choice(poll=poll1, choice='42', votes=1)
         choice1.save()
-        choice2 = Choice(poll=poll1, choice='The Ultimate Answser', votes=2)
+        choice2 = Choice(poll=poll1, choice='The Ultimate Answer', votes=2)
         choice2.save()
 
         response = self.client.get('/poll/%d/' % (poll1.id, ))
@@ -99,8 +99,8 @@ class SinglePollViewTest(TestCase):
         choice2 = Choice(poll=poll1, choice='you', votes=1)
         choice2.save()
 
-        self.assertEqual(choice1.percentage(), 100 * 2 / 3.0)
-        self.assertEqual(choice2.percentage(), 100 * 1 / 3.0)
+        self.assertEqual(choice1.percentage(), round(100 * 2 / 3.0, 2))
+        self.assertEqual(choice2.percentage(), round(100 * 1 / 3.0, 2))
 
         # Also check 0-vote case
         choice1.votes = 0
